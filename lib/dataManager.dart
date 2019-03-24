@@ -74,7 +74,7 @@ class Day {
     this.state,
   });
 
-  static const int stateDone = 1;
-  static const int stateNotDone = 0;
-  static const int stateNotSet = -1;
+  static const int stateDone = 2;
+  static const int stateNotDone = 1;
+  static const int stateNotSet = 0;
 }

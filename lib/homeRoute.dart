@@ -108,7 +108,9 @@ class WeekViewDay extends StatelessWidget {
           Day.stateNotDone: Colors.red,
           Day.stateNotSet: Colors.grey,
         }[_day.state],
-        onPressed: () {},
+        onPressed: () {
+          DataManager.setDay(_day.date, (_day.state + 1) % 3);
+        },
         padding: EdgeInsets.all(0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(19.0))
