@@ -102,23 +102,24 @@ class WeekViewDay extends StatelessWidget {
       width: 38.0,
       height: 38.0,
       margin: EdgeInsets.all(4),
-      decoration: new BoxDecoration(
+      child: RaisedButton(
         color: {
           Day.stateDone: Colors.green,
           Day.stateNotDone: Colors.red,
           Day.stateNotSet: Colors.grey,
         }[_day.state],
-        borderRadius: new BorderRadius.all(
-          const Radius.circular(19.0),
+        onPressed: () {},
+        padding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(19.0))
         ),
-        boxShadow: kElevationToShadow[4],
-      ),
-      child: Center(
-        child: Text(
-          DateFormat('E').format(_day.date),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 13,
+        child: Center(
+          child: Text(
+            DateFormat('E').format(_day.date),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+            ),
           ),
         ),
       ),
