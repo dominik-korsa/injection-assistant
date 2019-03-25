@@ -21,7 +21,7 @@ class DataManager {
     return _daysStreamController.stream;
   }
 
-  static setDay(DateTime date, int state) {
+  static void setDay(DateTime date, int state) {
     Day day = _daysList.firstWhere((Day day) => day.date.isAtSameMomentAs(date), orElse: () => null);
     if(day == null) {
       int id = _DatabaseConnector.addDay(date, state);
