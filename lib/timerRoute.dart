@@ -39,6 +39,9 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
   }
 
   void _timerSave() {
+    DateTime now = DateTime.now();
+    DateTime today =DateTime(now.year, now.month, now.day);
+    DataManager.setDay(today, Day.stateDone);
     Navigator.pop(context);
   }
 
