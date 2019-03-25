@@ -9,6 +9,7 @@ class SettingsRoute extends StatefulWidget {
 
 class _SettingsRouteState extends State<SettingsRoute> {
   int _timerDuration;
+  int _ampouleMaxUses;
   TimeOfDay _notificationTime;
 
   @override
@@ -17,8 +18,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
     setState(() {});
     DataManager.getNotificationTime().then((TimeOfDay notificationTimeTmp) async {
       int timerDurationTmp = await DataManager.getTimerDuration();
+      int ampouleMaxUsesTmp = await DataManager.getAmpouleMaxUses();
       setState(() {
         _notificationTime = notificationTimeTmp;
+        _ampouleMaxUses = ampouleMaxUsesTmp;
         _timerDuration = timerDurationTmp;
       });
     });
@@ -40,6 +43,25 @@ class _SettingsRouteState extends State<SettingsRoute> {
     setState(() {
       DataManager.setTimerDuration(duration);
       _timerDuration = duration;
+    });
+  }
+
+  void _selectAmpouleMaxUses() async {
+    int uses = await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return new NumberPickerDialog.integer(
+          minValue: 1,
+          maxValue: 50,
+          title: new Text('Ampoule uses'),
+          initialIntegerValue: _ampouleMaxUses ?? 10,
+        );
+      }
+    );
+
+    setState(() {
+      DataManager.setAmpouleMaxUses(uses);
+      _ampouleMaxUses = uses;
     });
   }
 
@@ -69,6 +91,11 @@ class _SettingsRouteState extends State<SettingsRoute> {
               title: new Text('Timer duration'),
               subtitle: _timerDuration != null ? new Text('$_timerDuration seconds') : null,
               onTap: _selectTimerDuration,
+            ),
+            new ListTile(
+              title: new Text('Ampoule uses'),
+              subtitle: _ampouleMaxUses != null ? new Text('$_ampouleMaxUses uses') : null,
+              onTap: _selectAmpouleMaxUses,
             ),
             new ListTile(
               title: new Text('Reminder notification time'),

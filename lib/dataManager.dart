@@ -52,6 +52,14 @@ class DataManager {
   static void setNotificationTime(TimeOfDay time) {
     _KeystoreConnector.setNotificationTime(time);
   }
+
+  static Future<int> getAmpouleMaxUses() {
+    return _KeystoreConnector.getAmpouleMaxUses();
+  }
+
+  static void setAmpouleMaxUses(int uses) {
+    _KeystoreConnector.setAmpouleMaxUses(uses);
+  }
 }
 
 class _DatabaseConnector {
@@ -110,6 +118,18 @@ class _KeystoreConnector {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int timeInMinutes = time.hour * 60 + time.minute;
     prefs.setInt('notification-time', timeInMinutes);
+    return;
+  }
+
+  static Future<int> getAmpouleMaxUses() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int uses = prefs.getInt('ampoule-max-uses') ?? 10;
+    return uses;
+  }
+
+  static void setAmpouleMaxUses(int uses) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('ampoule-max-uses', uses);
     return;
   }
 }
