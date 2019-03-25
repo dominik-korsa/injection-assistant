@@ -1,5 +1,5 @@
 name: injection_assistant
-description: A new Flutter project.
+description: An app to help in making injections.
 
 dependencies:
   flutter:
