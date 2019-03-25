@@ -37,6 +37,17 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
     SystemSound.play(SystemSoundType.click);
   }
 
+  void _timerSave() {
+    Navigator.pop(context);
+  }
+
+  void _timerRestart() {
+    setState(() {
+      _finished = false;
+      controller.reset();
+    });
+  }
+
   Animation<double> animation;
   AnimationController controller;
 
@@ -59,11 +70,45 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return new Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 48.0),
-        child: new Center(
-          child: _finished ?
-          new Icon(Icons.timer, size: 256, color: Colors.black87) :
-          new Text(
+        padding: _finished ? EdgeInsets.zero : EdgeInsets.only(bottom: 48.0),
+        child: _finished ?
+        new Column(
+          children: [
+            new Expanded(
+              child: new Center(
+                child: new Icon(Icons.timer, size: 256, color: Colors.black87)
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                bottom: 16,
+                left: 24,
+                right: 24,
+              ),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlineButton.icon(
+                    color: Theme.of(context).primaryColor,
+                    highlightColor: Theme.of(context).primaryColor.withOpacity(0.3),
+                    onPressed: _timerRestart,
+                    icon: new Icon(Icons.replay),
+                    label: new Text('Restart'),
+                  ),
+                  RaisedButton.icon(
+                    color: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).primaryTextTheme.button.color,
+                    onPressed: _timerSave,
+                    icon: new Icon(Icons.save),
+                    label: new Text('Save'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ) :
+        new Center(
+          child: new Text(
             '${animation.value.floor()}',
             style: TextStyle(
               fontWeight: FontWeight.w100,
@@ -72,16 +117,16 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
           ),
         ),
       ),
-      floatingActionButton: _running() ?
-        new FloatingActionButton(
+      floatingActionButton: _finished ? null : _running() ?
+        new FloatingActionButton.extended(
           onPressed: _stopTimer,
-          child: new Icon(Icons.stop),
-          tooltip: 'Pause',
+          label: new Text('Stop timer'),
+          icon: new Icon(Icons.stop),
         ):
-        new FloatingActionButton(
+        new FloatingActionButton.extended(
           onPressed: _startTimer,
-          child: new Icon(Icons.play_arrow),
-          tooltip: 'Start',
+          label: new Text('Start timer'),
+          icon: new Icon(Icons.play_arrow),
         ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
