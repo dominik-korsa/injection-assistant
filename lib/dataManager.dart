@@ -35,6 +35,14 @@ class DataManager {
      _daysStreamController.add(_daysList);
     }
   }
+
+  static int getTimerDuration() {
+    return _DatabaseConnector.getTimerDuration();
+  }
+
+  static void setTimerDuration(int duration) {
+    _DatabaseConnector.setTimerDuration(duration);
+  }
 }
 
 class _DatabaseConnector {
@@ -60,6 +68,14 @@ class _DatabaseConnector {
 
   static int addDay(DateTime date, int state) {
     return new Random().nextInt(1000000000);
+  }
+
+  static int getTimerDuration() {
+    return 5;
+  }
+
+  static void setTimerDuration(int duration) {
+    return;
   }
 }
 

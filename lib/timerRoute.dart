@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:injection_assistant/dataManager.dart';
 import 'package:vibrate/vibrate.dart';
 
 class TimerRoute extends StatefulWidget {
@@ -54,8 +55,9 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: const Duration(seconds: 1), vsync: this);
-    animation = Tween<double>(begin: 45, end: 0).animate(controller)
+    int duration = DataManager.getTimerDuration();
+    controller = AnimationController(duration: Duration(seconds: duration), vsync: this);
+    animation = Tween<double>(begin: duration.toDouble(), end: 0).animate(controller)
       ..addListener(() {
         setState(() {});
       })
