@@ -11,7 +11,7 @@ class TimerRoute extends StatefulWidget {
 
 class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateMixin {
   bool _running() {
-    return controller.isAnimating || false;
+    return controller != null && controller.isAnimating;
   }
 
   bool _finished = false;
@@ -55,17 +55,19 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    int duration = DataManager.getTimerDuration();
-    controller = AnimationController(duration: Duration(seconds: duration), vsync: this);
-    animation = Tween<double>(begin: duration.toDouble(), end: 0).animate(controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((state) {
-        if (state == AnimationStatus.completed) {
-          _timerFinish();
-        }
-      });
+    DataManager.getTimerDuration().then((int duration) {
+      setState(() {});
+      controller = AnimationController(duration: Duration(seconds: duration), vsync: this);
+      animation = Tween<double>(begin: duration.toDouble(), end: 0).animate(controller)
+        ..addListener(() {
+          setState(() {});
+        })
+        ..addStatusListener((state) {
+          if (state == AnimationStatus.completed) {
+            _timerFinish();
+          }
+        });
+    });
   }
 
   @override
@@ -111,7 +113,7 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
         ) :
         new Center(
           child: new Text(
-            '${animation.value.floor()}',
+            '${animation != null ? animation.value.floor() : ''}',
             style: TextStyle(
               fontWeight: FontWeight.w100,
               fontSize: 192,

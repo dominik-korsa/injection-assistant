@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'dart:math';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DataManager {
   static List<Day> _daysList = _DatabaseConnector._getDays();
@@ -36,12 +36,12 @@ class DataManager {
     }
   }
 
-  static int getTimerDuration() {
-    return _DatabaseConnector.getTimerDuration();
+  static Future<int> getTimerDuration() {
+    return _KeystoreConnector.getTimerDuration();
   }
 
   static void setTimerDuration(int duration) {
-    _DatabaseConnector.setTimerDuration(duration);
+    _KeystoreConnector.setTimerDuration(duration);
   }
 }
 
@@ -69,12 +69,18 @@ class _DatabaseConnector {
   static int addDay(DateTime date, int state) {
     return new Random().nextInt(1000000000);
   }
+}
 
-  static int getTimerDuration() {
-    return 5;
+class _KeystoreConnector {
+  static Future<int> getTimerDuration() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int duration = prefs.getInt('timer-duration') ?? 45;
+    return duration;
   }
 
-  static void setTimerDuration(int duration) {
+  static void setTimerDuration(int duration) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('timer-duration', duration);
     return;
   }
 }
