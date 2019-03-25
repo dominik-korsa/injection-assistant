@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:injection_assistant/settingsRoute.dart';
 import 'package:intl/intl.dart';
 import 'dataManager.dart';
 import 'timerRoute.dart';
@@ -19,12 +20,26 @@ class _HomeRouteState extends State<HomeRoute> {
     );
   }
 
+  void _launchSettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SettingsRoute()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            tooltip: 'Settings',
+            onPressed: _launchSettings,
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 48.0),
