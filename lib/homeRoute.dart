@@ -36,10 +36,10 @@ class _HomeRouteState extends State<HomeRoute> {
           ),
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: new FloatingActionButton.extended(
         onPressed: _launchTimer,
-        tooltip: 'Launch timer',
-        child: new Icon(Icons.timer),
+        label: new Text('Launch timer'),
+        icon: new Icon(Icons.timer),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
