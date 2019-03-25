@@ -51,67 +51,67 @@ class DataManager {
 
   static void setNotificationTime(TimeOfDay time) {
     _KeystoreConnector.setNotificationTime(time);
+  }
+}
+
+class _DatabaseConnector {
+  static List<Day> _getDays() {
+    DateTime _now = new DateTime.now();
+    DateTime _today = new DateTime(_now.year, _now.month, _now.day);
+    List<Day> _days = [];
+    for (var i = 0; i < 14; i++) {
+      if(i % 6 != 5) {
+        _days.add(new Day(
+          id: i,
+          date: _today.subtract(new Duration(days: 13 - i)),
+          state: [Day.stateDone, Day.stateNotDone, Day.stateNotSet][i % 3],
+        ));
       }
     }
+    return _days;
+  }
 
-    class _DatabaseConnector {
-      static List<Day> _getDays() {
-        DateTime _now = new DateTime.now();
-        DateTime _today = new DateTime(_now.year, _now.month, _now.day);
-        List<Day> _days = [];
-        for (var i = 0; i < 14; i++) {
-          if(i % 6 != 5) {
-            _days.add(new Day(
-              id: i,
-              date: _today.subtract(new Duration(days: 13 - i)),
-              state: [Day.stateDone, Day.stateNotDone, Day.stateNotSet][i % 3],
-            ));
-          }
-        }
-        return _days;
-      }
+  static void updateDayStatus(int id, int state) {
+    return;
+  }
 
-      static void updateDayStatus(int id, int state) {
-        return;
-      }
+  static int addDay(DateTime date, int state) {
+    return new Random().nextInt(1000000000);
+  }
+}
 
-      static int addDay(DateTime date, int state) {
-        return new Random().nextInt(1000000000);
-      }
+class _KeystoreConnector {
+  static Future<int> getTimerDuration() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int duration = prefs.getInt('timer-duration') ?? 45;
+    return duration;
+  }
+
+  static void setTimerDuration(int duration) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('timer-duration', duration);
+    return;
+  }
+
+  static Future<TimeOfDay> getNotificationTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int timeInMinutes = prefs.getInt('notification-time');
+    if (timeInMinutes == null) {
+      return new TimeOfDay(hour: 20, minute: 30);
     }
 
-    class _KeystoreConnector {
-      static Future<int> getTimerDuration() async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        int duration = prefs.getInt('timer-duration') ?? 45;
-        return duration;
-      }
+    int hour = (timeInMinutes / 60).floor();
+    int minute = timeInMinutes % 60;
+    TimeOfDay time = new TimeOfDay(hour: hour, minute: minute);
+    return time;
+  }
 
-      static void setTimerDuration(int duration) async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setInt('timer-duration', duration);
-        return;
-      }
-
-      static Future<TimeOfDay> getNotificationTime() async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        int timeInMinutes = prefs.getInt('notification-time');
-        if (timeInMinutes == null) {
-          return new TimeOfDay(hour: 20, minute: 30);
-        }
-
-        int hour = (timeInMinutes / 60).floor();
-        int minute = timeInMinutes % 60;
-        TimeOfDay time = new TimeOfDay(hour: hour, minute: minute);
-        return time;
-      }
-
-      static void setNotificationTime(TimeOfDay time) async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        int timeInMinutes = time.hour * 60 + time.minute;
-        prefs.setInt('notification-time', timeInMinutes);
-        return;
-      }
+  static void setNotificationTime(TimeOfDay time) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int timeInMinutes = time.hour * 60 + time.minute;
+    prefs.setInt('notification-time', timeInMinutes);
+    return;
+  }
 }
 
 class Day {
