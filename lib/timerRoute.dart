@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:vibrate/vibrate.dart';
 
 class TimerRoute extends StatefulWidget {
   TimerRoute({Key key}) : super(key: key);
@@ -34,7 +34,7 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
       _finished = true;
       controller.reset();
     });
-    SystemSound.play(SystemSoundType.click);
+    Vibrate.vibrateWithPauses([Duration(milliseconds: 250)]);
   }
 
   void _timerSave() {
