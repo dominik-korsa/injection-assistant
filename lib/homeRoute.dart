@@ -24,6 +24,7 @@ class _HomeRouteState extends State<HomeRoute> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 48.0),
