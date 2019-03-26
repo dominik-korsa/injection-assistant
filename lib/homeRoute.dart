@@ -48,14 +48,31 @@ class _HomeRouteState extends State<HomeRoute> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               new WeekView(),
-              new Text('Ampoule uses left:'),
+              new Container(
+                height: 48,
+              ),
+              new Text(
+                'Ampoule uses left:',
+                style: Theme.of(context).textTheme.subhead,
+              ),
               new StreamBuilder<int>(
                 stream: DataManager.ampouleLeftUses,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.data == null) {
-                    return new Text('Loading');
+                    return new Text(
+                      'Loading',
+                      style: Theme.of(context).textTheme.display1,
+                    );
+                  } else if (snapshot.data > 1) {
+                    return new Text(
+                      '${snapshot.data}',
+                      style: Theme.of(context).textTheme.display3,
+                    );
                   } else {
-                    return new Text('${snapshot.data}');
+                    return new Text(
+                      'Last use',
+                      style: Theme.of(context).textTheme.display1.apply(color: Colors.red),
+                    );
                   }
                 },
               ),
