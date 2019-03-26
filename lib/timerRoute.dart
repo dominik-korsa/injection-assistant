@@ -38,10 +38,19 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
     Vibrate.vibrateWithPauses([Duration(milliseconds: 250)]);
   }
 
-  void _timerSave() {
+  void _timerSave() async {
     DateTime now = DateTime.now();
-    DateTime today =DateTime(now.year, now.month, now.day);
+    DateTime today = DateTime(now.year, now.month, now.day);
     DataManager.setDay(today, Day.stateDone);
+    int leftUsesPrevious = await DataManager.getAmouleLeftUses();
+    int leftUses;
+    if (leftUsesPrevious - 1 <= 0) {
+      int maxUses = await DataManager.getAmpouleMaxUses();
+      leftUses = (leftUsesPrevious - 2) % maxUses + 1;
+    } else {
+      leftUses = leftUsesPrevious - 1;
+    }
+    DataManager.setAmpouleLeftUses(leftUses);
     Navigator.pop(context);
   }
 

@@ -60,6 +60,39 @@ class DataManager {
   static void setAmpouleMaxUses(int uses) {
     _KeystoreConnector.setAmpouleMaxUses(uses);
   }
+
+  static int _ampouleLeftUses;
+  static StreamController<int> _ampouleLeftUsesController;
+
+  static Stream<int> get ampouleLeftUses {
+    if(_ampouleLeftUsesController == null) {
+      _ampouleLeftUsesController = StreamController<int>(
+        onListen: () async {
+          _ampouleLeftUses = await _KeystoreConnector.getAmpouleLeftUses();
+          _ampouleLeftUsesController.add(_ampouleLeftUses);
+        },
+        onCancel: () {
+          _ampouleLeftUsesController.close();
+        }
+      );
+    }
+
+    return _ampouleLeftUsesController.stream;
+  }
+
+  static Future<int> getAmouleLeftUses() {
+    return _KeystoreConnector.getAmpouleLeftUses();
+  }
+
+  static void setAmpouleLeftUses(int uses) {
+    _KeystoreConnector.setAmpouleLeftUses(uses);
+
+    _ampouleLeftUses = uses;
+
+    if(_ampouleLeftUsesController != null) {
+     _ampouleLeftUsesController.add(_ampouleLeftUses);
+    }
+  }
 }
 
 class _DatabaseConnector {
@@ -130,6 +163,18 @@ class _KeystoreConnector {
   static void setAmpouleMaxUses(int uses) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('ampoule-max-uses', uses);
+    return;
+  }
+
+  static Future<int> getAmpouleLeftUses() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int uses = prefs.getInt('ampoule-left-uses') ?? await getAmpouleMaxUses();
+    return uses;
+  }
+
+  static void setAmpouleLeftUses(int uses) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('ampoule-left-uses', uses);
     return;
   }
 }
