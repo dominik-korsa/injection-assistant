@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:injection_assistant/settingsRoute.dart';
 import 'package:intl/intl.dart';
@@ -38,7 +40,7 @@ class _HomeRouteState extends State<HomeRoute> {
           minValue: 1,
           maxValue: usesMax,
           title: new Text('Ampoule uses'),
-          initialIntegerValue: usesLeft ?? usesMax,
+          initialIntegerValue: min(usesLeft, usesMax),
         );
       }
     );
