@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:injection_assistant/settingsRoute.dart';
 import 'package:intl/intl.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'dataManager.dart';
 import 'timerRoute.dart';
 
@@ -27,6 +28,26 @@ class _HomeRouteState extends State<HomeRoute> {
     );
   }
 
+  void _changeAmpouleUsesLeft() async {
+    int usesLeft = await DataManager.getAmouleLeftUses();
+    int usesMax = await DataManager.getAmpouleMaxUses();
+    int usesSet = await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return new NumberPickerDialog.integer(
+          minValue: 1,
+          maxValue: usesMax,
+          title: new Text('Ampoule uses'),
+          initialIntegerValue: usesLeft ?? usesMax,
+        );
+      }
+    );
+
+    if (usesSet == null) { return; }
+
+    DataManager.setAmpouleLeftUses(usesSet);
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -51,30 +72,52 @@ class _HomeRouteState extends State<HomeRoute> {
               new Container(
                 height: 48,
               ),
-              new Text(
-                'Ampoule uses left:',
-                style: Theme.of(context).textTheme.subhead,
-              ),
-              new StreamBuilder<int>(
-                stream: DataManager.ampouleLeftUses,
-                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                  if (snapshot.data == null) {
-                    return new Text(
-                      'Loading',
-                      style: Theme.of(context).textTheme.display1,
-                    );
-                  } else if (snapshot.data > 1) {
-                    return new Text(
-                      '${snapshot.data}',
-                      style: Theme.of(context).textTheme.display3,
-                    );
-                  } else {
-                    return new Text(
-                      'Last use',
-                      style: Theme.of(context).textTheme.display1.apply(color: Colors.red),
-                    );
-                  }
-                },
+              new FlatButton(
+                onPressed: _changeAmpouleUsesLeft,
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Text(
+                      'Ampoule uses left:',
+                      style: Theme.of(context).textTheme.subhead,
+                    ),
+                    new StreamBuilder<int>(
+                      stream: DataManager.ampouleLeftUses,
+                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                        if (snapshot.data == null) {
+                          return new Text(
+                            'Loading',
+                            style: Theme.of(context).textTheme.display1,
+                          );
+                        } else if (snapshot.data > 1) {
+                          return Container(
+                            height: 80,
+                            child: Center(
+                              widthFactor: 0,
+                              child: new Text(
+                                '${snapshot.data}',
+                                style: Theme.of(context).textTheme.display3,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Container(
+                            height: 80,
+                            child: Center(
+                              widthFactor: 0,
+                              child: new Text(
+                                'Last use',
+                                style: Theme.of(context).textTheme.display1.apply(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
