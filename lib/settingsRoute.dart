@@ -53,7 +53,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
       context: context,
       builder: (BuildContext context) {
         return new NumberPickerDialog.integer(
-          minValue: 1,
+          minValue: 2,
           maxValue: 50,
           title: new Text('Ampoule uses'),
           initialIntegerValue: _ampouleMaxUses ?? 10,
