@@ -40,6 +40,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
       }
     );
 
+    if (duration == null) { return; }
+
     setState(() {
       DataManager.setTimerDuration(duration);
       _timerDuration = duration;
@@ -59,6 +61,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
       }
     );
 
+    if (uses == null) { return; }
+
     setState(() {
       DataManager.setAmpouleMaxUses(uses);
       _ampouleMaxUses = uses;
@@ -70,6 +74,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
       initialTime: _notificationTime ?? TimeOfDay.now(),
       context: context,
     );
+
+    if (pickedTime == null) { return; }
 
     setState(() {
       DataManager.setNotificationTime(pickedTime);
