@@ -80,7 +80,7 @@ class DataManager {
     return _ampouleLeftUsesController.stream;
   }
 
-  static Future<int> getAmouleLeftUses() {
+  static Future<int> getAmpouleLeftUses() {
     return _KeystoreConnector.getAmpouleLeftUses();
   }
 

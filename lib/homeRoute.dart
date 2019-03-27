@@ -31,7 +31,7 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   void _changeAmpouleUsesLeft() async {
-    int usesLeft = await DataManager.getAmouleLeftUses();
+    int usesLeft = await DataManager.getAmpouleLeftUses();
     int usesMax = await DataManager.getAmpouleMaxUses();
     int usesSet = await showDialog<int>(
       context: context,

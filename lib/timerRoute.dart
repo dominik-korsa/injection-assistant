@@ -42,7 +42,7 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     DataManager.setDay(today, Day.stateDone);
-    int leftUsesPrevious = await DataManager.getAmouleLeftUses();
+    int leftUsesPrevious = await DataManager.getAmpouleLeftUses();
     int leftUses;
     if (leftUsesPrevious - 1 <= 0) {
       int maxUses = await DataManager.getAmpouleMaxUses();
