@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataManager {
-  static List<Day> _daysList = _DatabaseConnector._getDays();
+  static List<Day> _daysList;
   static StreamController<List<Day>> _daysStreamController;
 
   static Stream<List<Day>> get days {
     if(_daysStreamController == null) {
       _daysStreamController = StreamController<List<Day>>(
         onListen: () async {
+          if (_daysList == null) {
+            _daysList = await _DatabaseConnector._getDays();
+          }
           _daysStreamController.add(_daysList);
         },
         onCancel: () {
@@ -22,10 +25,13 @@ class DataManager {
     return _daysStreamController.stream;
   }
 
-  static void setDay(DateTime date, int state) {
+  static void setDay(DateTime date, int state) async {
+    if (_daysList == null) {
+      _daysList = await _DatabaseConnector._getDays();
+    }
     Day day = _daysList.firstWhere((Day day) => day.date.isAtSameMomentAs(date), orElse: () => null);
     if(day == null) {
-      int id = _DatabaseConnector.addDay(date, state);
+      int id = await _DatabaseConnector.addDay(date, state);
       _daysList.add(new Day(date: date, state: state, id: id));
     } else {
       _DatabaseConnector.updateDayStatus(day.id, state);
@@ -96,7 +102,7 @@ class DataManager {
 }
 
 class _DatabaseConnector {
-  static List<Day> _getDays() {
+  static Future<List<Day>> _getDays() async {
     DateTime _now = new DateTime.now();
     DateTime _today = new DateTime(_now.year, _now.month, _now.day);
     List<Day> _days = [];
@@ -112,11 +118,11 @@ class _DatabaseConnector {
     return _days;
   }
 
-  static void updateDayStatus(int id, int state) {
+  static void updateDayStatus(int id, int state) async {
     return;
   }
 
-  static int addDay(DateTime date, int state) {
+  static Future<int> addDay(DateTime date, int state) async {
     return new Random().nextInt(1000000000);
   }
 }
