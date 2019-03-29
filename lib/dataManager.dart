@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DataManager {
   static List<Day> _daysList;
@@ -102,28 +103,48 @@ class DataManager {
 }
 
 class _DatabaseConnector {
-  static Future<List<Day>> _getDays() async {
-    DateTime _now = new DateTime.now();
-    DateTime _today = new DateTime(_now.year, _now.month, _now.day);
-    List<Day> _days = [];
-    for (var i = 0; i < 14; i++) {
-      if(i % 6 != 5) {
-        _days.add(new Day(
-          id: i,
-          date: _today.subtract(new Duration(days: 13 - i)),
-          state: [Day.stateDone, Day.stateNotDone, Day.stateNotSet][i % 3],
-        ));
-      }
+  static Database _database;
+  static Future<Database> _getDatabase() async {
+    if (_database != null) {
+      return _database;
     }
-    return _days;
+    return await openDatabase(
+      join(await getDatabasesPath(), 'database.db'),
+      onCreate: (db, version) async {
+        await db.execute(
+          'CREATE TABLE Days (id INTEGER PRIMARY KEY AUTOINCREMENT, date REAL, state INTEGER);',
+        );
+      },
+      version: 1,
+    );
+  }
+
+  static Future<List<Day>> _getDays() async {
+    Database database = await _getDatabase();
+    List<Map<String, dynamic>> daysQuery = await database.query('Days');
+    if (daysQuery.isEmpty) {
+      return new List<Day>();
+    } else {
+      print(daysQuery);
+      List<Day> days = daysQuery.toList().map((Map<String, dynamic> row) {
+        return new Day.fromJson(row);
+      }).toList();
+      return days;
+    }
   }
 
   static void updateDayStatus(int id, int state) async {
-    return;
+    Database database = await _getDatabase();
+    await database.update('Days', { "state": state }, where: 'id=?', whereArgs: [ id ]);
   }
 
   static Future<int> addDay(DateTime date, int state) async {
-    return new Random().nextInt(1000000000);
+    final db = await _getDatabase();
+    var res = await db.insert('Days', {
+      'date': date.millisecondsSinceEpoch / 86400000,
+      'state': state,
+    });
+    return res;
   }
 }
 
@@ -195,6 +216,18 @@ class Day {
     this.date,
     this.state,
   });
+
+  factory Day.fromJson(Map<String, dynamic> json) => new Day(
+    id: json['id'],
+    date: new DateTime.fromMillisecondsSinceEpoch((json['date'] * 86400000).floor()), // Days since epoch
+    state: json['state'],
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'date': date.millisecondsSinceEpoch / 86400000, // Days since epoch
+    'state': state,
+  };
 
   static const int stateDone = 2;
   static const int stateNotDone = 1;
