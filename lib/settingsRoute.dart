@@ -104,7 +104,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
               onTap: _selectAmpouleMaxUses,
             ),
             new ListTile(
-              title: new Text('Reminder notification time'),
+              title: new Text('Reminder notification time (Not implemented)'),
+              enabled: false,
               subtitle: _notificationTime != null ? new Text(_notificationTime.format(context)) : null,
               onTap: _selectNotificationTime,
             ),
