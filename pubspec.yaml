@@ -4,6 +4,8 @@ description: An app to help in making injections.
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   sqflite:
   intl:
   vibrate:

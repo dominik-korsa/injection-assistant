@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:injection_assistant/localizations.dart';
 import 'package:injection_assistant/settingsRoute.dart';
 import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -39,7 +40,7 @@ class _HomeRouteState extends State<HomeRoute> {
         return new NumberPickerDialog.integer(
           minValue: 1,
           maxValue: usesMax,
-          title: new Text('Ampoule uses'),
+          title: new Text(AppLocalizations.of(context).ampouleUses),
           initialIntegerValue: min(usesLeft, usesMax),
         );
       }
@@ -59,7 +60,7 @@ class _HomeRouteState extends State<HomeRoute> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings),
-            tooltip: 'Settings',
+            tooltip: AppLocalizations.of(context).settings,
             onPressed: _launchSettings,
           )
         ],
@@ -74,50 +75,50 @@ class _HomeRouteState extends State<HomeRoute> {
               new Container(
                 height: 48,
               ),
-              new FlatButton(
-                onPressed: _changeAmpouleUsesLeft,
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              Container(
+                height: 108,
+                child: Column(
                   children: <Widget>[
-                    new Text(
-                      'Ampoule uses left:',
-                      style: Theme.of(context).textTheme.subhead,
+                    new FlatButton(
+                      onPressed: _changeAmpouleUsesLeft,
+                      child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Text(
+                            AppLocalizations.of(context).ampouleUsesLeft,
+                            style: Theme.of(context).textTheme.subhead,
+                          ),
+                          new Container(
+                            height: 12,
+                            width: 0,
+                          ),
+                          new StreamBuilder<int>(
+                            stream: DataManager.ampouleLeftUses,
+                            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                              if (snapshot.data == null) {
+                                return new Text(
+                                  AppLocalizations.of(context).loading,
+                                  style: Theme.of(context).textTheme.display1,
+                                );
+                              } else if (snapshot.data > 1) {
+                                return new Text(
+                                  '${snapshot.data}',
+                                  style: Theme.of(context).textTheme.display3,
+                                );
+                              } else {
+                                return new Text(
+                                  AppLocalizations.of(context).lastUse,
+                                  style: Theme.of(context).textTheme.display1.apply(
+                                    color: Colors.red,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    new StreamBuilder<int>(
-                      stream: DataManager.ampouleLeftUses,
-                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                        if (snapshot.data == null) {
-                          return new Text(
-                            'Loading',
-                            style: Theme.of(context).textTheme.display1,
-                          );
-                        } else if (snapshot.data > 1) {
-                          return Container(
-                            height: 80,
-                            child: Center(
-                              widthFactor: 0,
-                              child: new Text(
-                                '${snapshot.data}',
-                                style: Theme.of(context).textTheme.display3,
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Container(
-                            height: 80,
-                            child: Center(
-                              widthFactor: 0,
-                              child: new Text(
-                                'Last use',
-                                style: Theme.of(context).textTheme.display1.apply(
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                    new Spacer(),
                   ],
                 ),
               ),
@@ -127,7 +128,7 @@ class _HomeRouteState extends State<HomeRoute> {
       ),
       floatingActionButton: new FloatingActionButton.extended(
         onPressed: _launchTimer,
-        label: new Text('Launch timer'),
+        label: new Text(AppLocalizations.of(context).launchTimer),
         icon: new Icon(Icons.timer),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -149,7 +150,7 @@ class _WeekViewState extends State<WeekView> {
         builder: (BuildContext context, AsyncSnapshot<List<Day>> snapshot) {
           List<Day> data;
           if (snapshot.data == null) {
-            return new Text('Loading');
+            return new Text(AppLocalizations.of(context).loading);
           } else {
             data = snapshot.data;
             List<Day> week = new List();
@@ -206,7 +207,7 @@ class WeekViewDay extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            DateFormat('E').format(_day.date),
+            DateFormat('EEE', Localizations.localeOf(context).languageCode).format(_day.date),
             style: TextStyle(
               color: Colors.white,
               fontSize: 13,

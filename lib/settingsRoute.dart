@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:injection_assistant/localizations.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:injection_assistant/dataManager.dart';
 
@@ -34,7 +35,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
         return new NumberPickerDialog.integer(
           minValue: 1,
           maxValue: 120,
-          title: new Text('Select timer time'),
+          title: new Text(AppLocalizations.of(context).timerDuration),
           initialIntegerValue: _timerDuration ?? 45,
         );
       }
@@ -55,7 +56,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
         return new NumberPickerDialog.integer(
           minValue: 2,
           maxValue: 50,
-          title: new Text('Ampoule uses'),
+          title: new Text(AppLocalizations.of(context).ampouleUses),
           initialIntegerValue: _ampouleMaxUses ?? 10,
         );
       }
@@ -87,24 +88,24 @@ class _SettingsRouteState extends State<SettingsRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Settings'),
+        title: new Text(AppLocalizations.of(context).settings),
         centerTitle: true,
       ),
       body: new Container(
         child: new ListView(
           children: <Widget>[
             new ListTile(
-              title: new Text('Timer duration'),
-              subtitle: _timerDuration != null ? new Text('$_timerDuration seconds') : null,
+              title: new Text(AppLocalizations.of(context).timerDuration),
+              subtitle: _timerDuration != null ? new Text(AppLocalizations.of(context).timerDurationValue(_timerDuration)) : null,
               onTap: _selectTimerDuration,
             ),
             new ListTile(
-              title: new Text('Ampoule uses'),
-              subtitle: _ampouleMaxUses != null ? new Text('$_ampouleMaxUses uses') : null,
+              title: new Text(AppLocalizations.of(context).ampouleUses),
+              subtitle: _ampouleMaxUses != null ? new Text(AppLocalizations.of(context).ampouleUsesValue(_ampouleMaxUses)) : null,
               onTap: _selectAmpouleMaxUses,
             ),
             new ListTile(
-              title: new Text('Reminder notification time (Not implemented)'),
+              title: new Text(AppLocalizations.of(context).reminderNotificationTime),
               enabled: false,
               subtitle: _notificationTime != null ? new Text(_notificationTime.format(context)) : null,
               onTap: _selectNotificationTime,

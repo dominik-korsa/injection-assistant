@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:injection_assistant/dataManager.dart';
+import 'package:injection_assistant/localizations.dart';
 import 'package:vibrate/vibrate.dart';
 
 class TimerRoute extends StatefulWidget {
@@ -109,14 +110,14 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
                     highlightColor: Theme.of(context).primaryColor.withOpacity(0.3),
                     onPressed: _timerRestart,
                     icon: new Icon(Icons.replay),
-                    label: new Text('Restart'),
+                    label: new Text(AppLocalizations.of(context).restart),
                   ),
                   RaisedButton.icon(
                     color: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).primaryTextTheme.button.color,
                     onPressed: _timerSave,
                     icon: new Icon(Icons.save),
-                    label: new Text('Save'),
+                    label: new Text(AppLocalizations.of(context).save),
                   ),
                 ],
               ),
@@ -136,12 +137,12 @@ class _TimerRouteState extends State<TimerRoute> with SingleTickerProviderStateM
       floatingActionButton: _finished ? null : _running() ?
         new FloatingActionButton.extended(
           onPressed: _stopTimer,
-          label: new Text('Stop timer'),
+          label: new Text(AppLocalizations.of(context).stopTimer),
           icon: new Icon(Icons.stop),
         ):
         new FloatingActionButton.extended(
           onPressed: _startTimer,
-          label: new Text('Start timer'),
+          label: new Text(AppLocalizations.of(context).startTimer),
           icon: new Icon(Icons.play_arrow),
         ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
